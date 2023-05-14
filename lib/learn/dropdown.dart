@@ -42,25 +42,6 @@ class _DropdownLearnState extends State<DropdownLearn> {
     }
   }
 
-  final List<DropdownMenuItem> _itemDropdown = [
-    const DropdownMenuItem(
-      value: 'johanliebert@gmail.com',
-      child: Text('johanliebert@gmail.com'),
-    ),
-    const DropdownMenuItem(
-      value: 'williammm@gmail.com',
-      child: Text('williammm@gmail.com'),
-    ),
-    const DropdownMenuItem(
-      value: 'thisisino@gmail.com',
-      child: Text('thisisino@gmail.com'),
-    ),
-    const DropdownMenuItem(
-      value: 'helloperkins@gmail.com',
-      child: Text('helloperkins@gmail.com'),
-    ),
-  ];
-
   String? _newVal;
 
   @override
