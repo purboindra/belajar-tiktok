@@ -16,18 +16,14 @@ class _LearnSearchState extends State<LearnSearch> {
   bool _isLoading = false;
   final List _user = [];
   final List _searchUser = [];
-  List<String> listHistoryForPrefs = [];
-  final searchC = TextEditingController();
-  bool _isFocus = false;
 
+  final searchC = TextEditingController();
+
+  List<String> listHistoryForPrefs = [];
+  bool _isFocus = false;
   final FocusNode _focusNode = FocusNode();
 
-  @override
-  void initState() {
-    super.initState();
-    _getData();
-    _getHistorySearch();
-  }
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
 
   void _onUnFocusChange() {
     _focusNode.unfocus();
@@ -40,32 +36,7 @@ class _LearnSearchState extends State<LearnSearch> {
     setState(() {});
   }
 
-  void _getData() async {
-    await getData();
-  }
-
-  void _getHistorySearch() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    listHistoryForPrefs
-        .addAll(preferences.getStringList('historySearch') ?? []);
-  }
-
-  void _deleteHistorySearch(int index) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final isOnSearch =
-        listHistoryForPrefs.indexWhere((element) => element == searchC.text);
-    if (isOnSearch != -1) {
-      searchC.clear();
-      _searchUser.clear();
-    }
-    listHistoryForPrefs.removeAt(index);
-    preferences.setStringList('historySearch', listHistoryForPrefs);
-
-    setState(() {});
-  }
-
   void searchUser(String text) async {
-    _searchUser.clear();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     if (text.isNotEmpty) {
       final user = _user
@@ -90,6 +61,20 @@ class _LearnSearchState extends State<LearnSearch> {
     }
   }
 
+  void _deleteHistorySearch(int index) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    final isOnSearch =
+        listHistoryForPrefs.indexWhere((element) => element == searchC.text);
+    if (isOnSearch != -1) {
+      searchC.clear();
+      _searchUser.clear();
+    }
+    listHistoryForPrefs.removeAt(index);
+    preferences.setStringList('historySearch', listHistoryForPrefs);
+
+    setState(() {});
+  }
+
   Future getData() async {
     try {
       setState(() {
@@ -111,6 +96,23 @@ class _LearnSearchState extends State<LearnSearch> {
     }
   }
 
+  void _getHistorySearch() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    listHistoryForPrefs
+        .addAll(preferences.getStringList('historySearch') ?? []);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+    _getHistorySearch();
+  }
+
+  void _getData() async {
+    await getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -119,98 +121,131 @@ class _LearnSearchState extends State<LearnSearch> {
         appBar: AppBar(
           title: const Text('Belajar Search'),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SafeArea(
-                child: TextFormField(
-                  onTap: () {
-                    _onFocusChange();
-                  },
-                  focusNode: _focusNode,
-                  controller: searchC,
-                  onChanged: (value) {
-                    if (value.isEmpty) _searchUser.clear();
-                    setState(() {});
-                  },
-                  onEditingComplete: () => searchUser(searchC.text),
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7),
+        body: Form(
+          key: _globalKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SafeArea(
+                  child: TextFormField(
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    onTap: () {
+                      _onFocusChange();
+                    },
+                    focusNode: _focusNode,
+                    controller: searchC,
+                    onChanged: (value) {
+                      if (value.isEmpty) _searchUser.clear();
+                      setState(() {});
+                    },
+                    onEditingComplete: () => searchUser(searchC.text),
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              if (_isFocus == true && listHistoryForPrefs.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Terakhir Dicari'),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    Wrap(
-                      children: List.generate(
-                        listHistoryForPrefs.length,
-                        (index) => InkWell(
-                          onTap: () {
-                            searchC.text = listHistoryForPrefs[index];
-                            searchUser(searchC.text);
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5, top: 3),
-                            child: Chip(
-                              onDeleted: () => _deleteHistorySearch(index),
-                              deleteIconColor: Colors.black,
-                              deleteIcon: const Icon(
-                                Icons.cancel,
-                                size: 14,
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      if (!_globalKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text('You must type something')));
+                      }
+                      searchUser(searchC.text);
+                    },
+                    child: const Text('Submit')),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (_isFocus == true && listHistoryForPrefs.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Terakhir Dicari'),
+                      const SizedBox(
+                        height: 7,
+                      ),
+                      Wrap(
+                        children: List.generate(
+                          listHistoryForPrefs.length,
+                          (index) => InkWell(
+                            onTap: () {
+                              searchC.text = listHistoryForPrefs[index];
+                              searchUser(searchC.text);
+                              setState(() {});
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 5, top: 3),
+                              child: Chip(
+                                onDeleted: () => _deleteHistorySearch(index),
+                                deleteIconColor: Colors.black,
+                                deleteIcon: const Icon(
+                                  Icons.cancel,
+                                  size: 14,
+                                ),
+                                label: Text(listHistoryForPrefs[index]),
                               ),
-                              label: Text(listHistoryForPrefs[index]),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                const SizedBox(
+                  height: 10,
                 ),
-              const SizedBox(
-                height: 10,
-              ),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : Expanded(
-                      child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: _searchUser.isNotEmpty
-                          ? _searchUser.length
-                          : _user.length,
-                      itemBuilder: (context, index) {
-                        final user = _searchUser.isNotEmpty
-                            ? _searchUser[index]
-                            : _user[index];
-                        return ListTile(
-                          title: Text(
-                              '${user['first_name']} ${user['last_name']}'),
-                          subtitle: Text(user['email']),
-                          leading: CircleAvatar(
-                            maxRadius: 30,
-                            backgroundImage: NetworkImage(user['avatar']),
-                          ),
-                        );
-                      },
-                    )),
-            ],
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : Expanded(
+                        child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: _searchUser.isNotEmpty
+                            ? _searchUser.length
+                            : _user.length,
+                        itemBuilder: (context, index) {
+                          final user = _searchUser.isNotEmpty
+                              ? _searchUser[index]
+                              : _user[index];
+                          return ListTile(
+                            title: Text(
+                                '${user['first_name']} ${user['last_name']}'),
+                            subtitle: Text(user['email']),
+                            leading: CircleAvatar(
+                              maxRadius: 30,
+                              backgroundImage: NetworkImage(user['avatar']),
+                            ),
+                          );
+                        },
+                      )),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+
+/*
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+*/
