@@ -32,8 +32,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  flutter_riverpod: ^2.3.6
   flutter_slidable: ^3.0.0
   http: ^0.13.6
+  riverpod: ^2.3.6
   shared_preferences: ^2.1.1
   smooth_page_indicator: ^1.1.0
 
