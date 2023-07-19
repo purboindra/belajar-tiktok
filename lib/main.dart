@@ -1,7 +1,6 @@
+import 'package:belajar_tiktok/learn/riverpod/favorites/all_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'learn/riverpod/search_riverpod/search.dart';
 
 void main() {
   runApp(const ProviderScope(
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const SearchUserRiverpod(),
+      home: const AllProductsScreen(),
     );
   }
 }
