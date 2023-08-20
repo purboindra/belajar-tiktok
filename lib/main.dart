@@ -1,8 +1,33 @@
-import 'package:belajar_tiktok/learn/riverpod/favorites/all_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
+  ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    FlutterError.dumpErrorToConsole(errorDetails);
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Error'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.error_outline_outlined,
+                color: Colors.red,
+                size: 100,
+              ),
+              Text(errorDetails.exceptionAsString().isNotEmpty
+                  ? errorDetails.exceptionAsString()
+                  : 'Sorry, something went wrong'),
+            ],
+          ),
+        ),
+      ),
+    );
+  };
+
   runApp(const ProviderScope(
     child: MyApp(),
   ));
@@ -28,7 +53,34 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const AllProductsScreen(),
+      home: MyWidget(),
+    );
+  }
+}
+
+class MyWidget extends StatelessWidget {
+  MyWidget({super.key});
+
+  final String name = 'purboyndra';
+  final int age = 12;
+  late String email;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('tiktok.com/purboyndra'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Name: $name'),
+            Text('Age: $age'),
+            Text('Email: $email'),
+          ],
+        ),
+      ),
     );
   }
 }
