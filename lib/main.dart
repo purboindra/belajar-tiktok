@@ -1,3 +1,4 @@
+import 'package:belajar_tiktok/learn/form_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,34 +56,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const OtpScreen(),
-    );
-  }
-}
-
-class MyWidget extends StatelessWidget {
-  MyWidget({super.key});
-
-  final String name = 'purboyndra';
-  final int age = 12;
-  late String email;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('tiktok.com/purboyndra'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Name: $name'),
-            Text('Age: $age'),
-            Text('Email: $email'),
-          ],
-        ),
-      ),
+      home: FormValidator(),
     );
   }
 }

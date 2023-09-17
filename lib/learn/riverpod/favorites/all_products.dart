@@ -95,10 +95,10 @@ class AllProductsScreen extends ConsumerWidget {
             ),
           ],
         ),
-        loading: () => Column(
+        loading: () => const Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Center(
               child: CircularProgressIndicator(),
             )
