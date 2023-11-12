@@ -1,4 +1,4 @@
-import 'package:belajar_tiktok/learn/launch_url.dart';
+import 'package:belajar_tiktok/learn/riverpod/connection_handler/connection_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const LaunchUrl(),
+      home: const ConnectionHandler(),
     );
   }
 }
