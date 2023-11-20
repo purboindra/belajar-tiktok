@@ -46,6 +46,7 @@ class _ConnectionHandlerState extends ConsumerState<ConnectionHandler> {
     late ConnectivityResult result;
     try {
       result = await _connectivity.checkConnectivity();
+      ref.read(connectivityResultProvider.notifier).update((state) => result);
     } on PlatformException catch (e) {
       log('Couldn\'t check connectivity status', error: e);
       return;
@@ -55,7 +56,7 @@ class _ConnectionHandlerState extends ConsumerState<ConnectionHandler> {
       return Future.value(null);
     }
 
-    return _updateConnectionStatus(result);
+    _updateConnectionStatus(result);
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
@@ -64,6 +65,9 @@ class _ConnectionHandlerState extends ConsumerState<ConnectionHandler> {
       case ConnectivityResult.mobile:
       case ConnectivityResult.wifi:
         ref.watch(isConnected.notifier).update((state) => true);
+        break;
+      case ConnectivityResult.none:
+        ref.watch(isConnected.notifier).update((state) => false);
         break;
       default:
         ref.watch(isConnected.notifier).update((state) => false);
@@ -78,22 +82,31 @@ class _ConnectionHandlerState extends ConsumerState<ConnectionHandler> {
       appBar: AppBar(
         title: const Text('Connection Handler'),
       ),
-      body: Center(
-        child: isConnect
-            ? _connectedWidget(context, connectionStatus)
-            : _noInternetWidget(context),
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Center(
+          child: isConnect
+              ? _connectedWidget(context, connectionStatus)
+              : _noInternetWidget(context),
+        ),
       ),
     );
   }
 
-  Text _connectedWidget(
+  Column _connectedWidget(
       BuildContext context, ConnectivityResult connectivityResult) {
-    return Text(
-      "Terhubung ke Internet $connectivityResult",
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Terhubung ke Internet $connectivityResult",
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 
