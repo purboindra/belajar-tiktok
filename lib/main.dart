@@ -1,4 +1,4 @@
-import 'package:belajar_tiktok/learn/pull_to_refresh.dart';
+import 'package:belajar_tiktok/learn/pie_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const PullToRefreshExample(),
+      home: const PieChartSample3(),
     );
   }
 }
