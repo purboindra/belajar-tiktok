@@ -1,4 +1,6 @@
+import 'package:belajar_tiktok/learn/learn_theme/theme_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LearnStepper extends StatefulWidget {
   const LearnStepper({super.key});
@@ -10,6 +12,8 @@ class LearnStepper extends StatefulWidget {
 class _LearnStepperState extends State<LearnStepper> {
   int index = 0;
 
+  final ThemeController _themeController = Get.find();
+
   List<Step> step() {
     return [
       Step(
@@ -18,7 +22,11 @@ class _LearnStepperState extends State<LearnStepper> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: index == 0 ? FontWeight.bold : FontWeight.w500,
-            color: index == 0 ? Colors.black : Colors.grey.shade600,
+            color: index == 0
+                ? _themeController.isDarkMode.isTrue
+                    ? Colors.white
+                    : Colors.black
+                : Colors.grey.shade600,
           ),
         ),
         content: Container(
@@ -30,7 +38,11 @@ class _LearnStepperState extends State<LearnStepper> {
           "Your package has dropped at Tangerang",
           style: TextStyle(
             fontWeight: index == 0 ? FontWeight.w600 : FontWeight.w400,
-            color: index == 0 ? Colors.black : Colors.grey.shade600,
+            color: index == 0
+                ? _themeController.isDarkMode.isTrue
+                    ? Colors.white
+                    : Colors.black
+                : Colors.grey.shade600,
           ),
         ),
       ),
