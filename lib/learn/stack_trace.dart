@@ -13,6 +13,8 @@ class StackTraceExample extends StatefulWidget {
 }
 
 class _StackTraceExampleState extends State<StackTraceExample> {
+  late Future<List<ProductModel>> fetchProducts;
+
   Future<List<ProductModel>> fetchData() async {
     try {
       List<ProductModel> temp = [];
@@ -34,10 +36,23 @@ class _StackTraceExampleState extends State<StackTraceExample> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchProducts = fetchData();
+  }
+
+  int counter = 0;
+
+  void increment() => setState(() {
+        counter++;
+      });
+
+  @override
   Widget build(BuildContext context) {
+    log("WIDGET REBUILD");
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Stack Trace Example"),
+        title: Text("Stack Trace Example Called: $counter x"),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -47,7 +62,7 @@ class _StackTraceExampleState extends State<StackTraceExample> {
         child: Column(
           children: [
             FutureBuilder(
-              future: fetchData(),
+              future: fetchProducts,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Expanded(
@@ -84,6 +99,9 @@ class _StackTraceExampleState extends State<StackTraceExample> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => increment(),
       ),
     );
   }
