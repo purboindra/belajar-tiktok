@@ -1,4 +1,4 @@
-import 'package:belajar_tiktok/learn/3d.dart';
+import 'package:belajar_tiktok/learn/presence.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -99,7 +99,7 @@ class MyApp extends StatelessWidget {
           style: TextButton.styleFrom(foregroundColor: Colors.white),
         ),
       ),
-      home: const O3DPage(),
+      home: const SimplePresence(),
     );
   }
 }
