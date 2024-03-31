@@ -1,4 +1,4 @@
-import 'package:belajar_tiktok/learn/flutter_ai.dart';
+import 'package:belajar_tiktok/learn/video_player_example.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -102,6 +102,6 @@ class MyApp extends StatelessWidget {
             style: TextButton.styleFrom(foregroundColor: Colors.white),
           ),
         ),
-        home: const FlutterGeminiExample());
+        home: const VideoPlayerExample());
   }
 }
